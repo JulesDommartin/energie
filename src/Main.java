@@ -1,7 +1,16 @@
+import data.Assets;
+import data.Client;
+import data.Depot;
+import data.Vehicule;
+
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
-
-        System.out.println("Hello World!");
+        List<Client> clients = Assets.getClients();
+        Vehicule vehicule = Assets.getVehicule();
+        Depot depot = Assets.getDepot();
     }
 }
+

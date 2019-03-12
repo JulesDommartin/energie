@@ -3,7 +3,7 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Client {
+public class Depot {
     public Double getLatitude() {
         return latitude;
     }
@@ -20,8 +20,8 @@ public class Client {
         this.longitude = longitude;
     }
 
-    public Integer getDemande() {
-        return demande;
+    void setTimeTo(Client c, Integer time) {
+        times.putIfAbsent(c, time);
     }
 
     public Integer getTimeTo(Client c) {
@@ -31,29 +31,22 @@ public class Client {
         return distances.get(c);
     }
 
-    void setTimeTo(Client c, Integer time) {
-        times.putIfAbsent(c, time);
-    }
     void setDistanceTo(Client c, Double distance) {
         distances.putIfAbsent(c, distance);
-    }
-
-    void setDemmande(Integer demande) {
-        this.demande = demande;
-    }
-
-    public Map<Client, Double> getDistances() {
-        return distances;
     }
 
     public Map<Client, Integer> getTimes() {
         return times;
     }
 
+    public Map<Client, Double> getDistances() {
+        return distances;
+    }
+
+    private Map<Client, Integer> times = new HashMap<>();
+    private Map<Client, Double> distances = new HashMap<>();
     private Double latitude;
     private Double longitude;
-    private Integer demande;
-    private Map<Client, Double> distances = new HashMap<>();
-    private Map<Client, Integer> times = new HashMap<>();
+
 
 }

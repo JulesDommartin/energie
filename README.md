@@ -1,7 +1,7 @@
 # Energie
 
 Ce projet a pour but de trouver le chemin optimal pour effectuer la livraison de client avec un véhicule électrique.  
-Ce projet a été réaliser dans le cadre de l’option Energie en M2 Miage.
+Ce projet a été réalisé dans le cadre de l’option Energie en M2 Miage.
 
 
 Pour compiler et lancer le programme, ouvrir un terminal, se placer dans le dossier "src", et exécuter les commandes suviantes:

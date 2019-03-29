@@ -3,7 +3,7 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Depot {
+public class Depot implements Point {
     public Double getLatitude() {
         return latitude;
     }

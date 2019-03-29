@@ -1,14 +1,13 @@
 package data;
 
 import javafx.util.Pair;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Assets {
-    private static String instance = "instance_1";
+    private static String instance = "instance_0";
 
     private static ArrayList<Client> clients;
 
@@ -37,11 +36,11 @@ public class Assets {
 
     private Assets() throws Exception {
         // Loading files and creating buffers
-        FileReader demandesAssets = new FileReader("./out/production/energie/assets/" + instance + "/demandes.txt");
-        FileReader tempsAssets = new FileReader("./out/production/energie/assets/" + instance + "/times.txt");
-        FileReader distanceAssets = new FileReader("./out/production/energie/assets/" + instance + "/distances.txt");
-        FileReader coordonneesAssets = new FileReader("./out/production/energie/assets/" + instance + "/coords.txt");
-        FileReader vehiculeAssets = new FileReader("./out/production/energie/assets/" + instance + "/vehicle.ini");
+        FileReader demandesAssets = new FileReader("./assets/" + instance + "/demandes.txt");
+        FileReader tempsAssets = new FileReader("./assets/" + instance + "/times.txt");
+        FileReader distanceAssets = new FileReader("./assets/" + instance + "/distances.txt");
+        FileReader coordonneesAssets = new FileReader("./assets/" + instance + "/coords.txt");
+        FileReader vehiculeAssets = new FileReader("./assets/" + instance + "/vehicle.ini");
         BufferedReader demandeBufRead = new BufferedReader(demandesAssets);
         BufferedReader coordBufRead = new BufferedReader(coordonneesAssets);
         BufferedReader tempsBufRead = new BufferedReader(tempsAssets);
@@ -217,7 +216,7 @@ public class Assets {
         }
     }
 
-    private void createDepot(@NotNull Pair<Double, Double> coordonees) {
+    private void createDepot(Pair<Double, Double> coordonees) {
         depot = new Depot();
         depot.setLatitude(coordonees.getKey());
         depot.setLongitude(coordonees.getValue());

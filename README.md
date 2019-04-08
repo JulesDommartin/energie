@@ -16,3 +16,21 @@ Chaque ligne est un véhicule, "C" => passage au dépôt, "R" => rechargement de
 Exemple : 
 - Véhicule 1 : 2,4,C,5,R,12
 - Véhicule 2 : 6,3,C,7,C,8
+
+JSON format : 
+{
+  "depot": {
+    "latitude": 46.55,
+    "longitude": 34.44
+  },
+  "clients": [
+    {
+      "latitude": 45.54,
+      "longitude": 34.43
+    },
+    {
+      ...
+    },
+    ...
+  ]
+}

@@ -75,10 +75,6 @@ public class Assets {
         createDepotTimeAndDistances(tempsDepot, distancesDepot);
         createClientsTimes(temps);
         createClientsDistances(distances);
-
-        System.out.println(clients.get(0).getLatitude());
-        System.out.println(depot.getLatitude());
-        System.out.println(" =debug");
     }
 
     private void createDepotTimeAndDistances(Integer[] times, Double[] distances) {

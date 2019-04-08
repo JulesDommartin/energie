@@ -3,6 +3,9 @@ import data.Depot;
 import data.Point;
 import data.Vehicule;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +58,18 @@ class Solution {
 
     public void export() {
         System.out.println("Objectif : " + this.evaluate());
+        String jsonString = "{\"tournees\": [";
+        String depotString = "";
         for (Map.Entry<Integer, List<Point>> entry : tournee.entrySet()) {
             System.out.println("Tournee " + (entry.getKey() + 1) + " :");
             float totalDemandes = 0.0f;
             float totalDistance = 0.0f;
             float totalDuree    = 0.0f;
+            jsonString += "{\"clients\": [";
             for(Point p : entry.getValue()) {
                 if (p instanceof Depot) {
                     System.out.println("Depot");
+                    depotString = "\"depot\": {\"latitude\":" + ((Depot) p).getLatitude() + ", \"longitude\": " + ((Depot) p).getLongitude() + "}";
                 } else {
                     Client c = (Client)p;
                     int numClient = entry.getValue().indexOf(p);
@@ -71,13 +78,31 @@ class Solution {
                     totalDistance += lastPoint.getDistanceTo(c);
                     totalDuree += lastPoint.getTimeTo(c) + (5 * 60) + (10 * c.getDemande());
                     System.out.println("Client " + numClient + " : [Demande = " +c.getDemande() + ", Distance = " + lastPoint.getDistanceTo(c) + ", Point = {" + c.getLatitude() + ":" + c.getLongitude() + "}]");
+                    jsonString += "{\"latitude\":" + c.getLatitude() + ", \"longitude\": " + c.getLongitude() + "}";
+                    if (numClient < entry.getValue().size() - 2) {
+                        jsonString += ",";
+                    }
                 }
+            }
+            jsonString += "]}";
+            if (entry.getKey() < tournee.size() - 1) {
+                jsonString += ",";
             }
             System.out.println("Total Demande : " + totalDemandes);
             System.out.println("Total Distance : " + totalDistance);
             System.out.println("Total Temps : " + totalDuree);
             System.out.println("=====================================");
         }
+        jsonString += "]," + depotString + "}";
+        System.out.println(jsonString);
 
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("result.json"));
+            writer.write(jsonString);
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

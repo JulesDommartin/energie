@@ -38,7 +38,7 @@ class Solution {
                     int numClient = entry.getValue().indexOf(p);
                     Point lastPoint = entry.getValue().get(numClient - 1);
                     totalDistance += lastPoint.getDistanceTo(c);
-                    totalDuree += lastPoint.getTimeTo(c);
+                    totalDuree += lastPoint.getTimeTo(c) + (5 * 60) + (10 * c.getDemande());
                 }
             }
         }
@@ -54,10 +54,12 @@ class Solution {
     }
 
     public void export() {
+        System.out.println("Objectif : " + this.evaluate());
         for (Map.Entry<Integer, List<Point>> entry : tournee.entrySet()) {
             System.out.println("Tournee " + (entry.getKey() + 1) + " :");
             float totalDemandes = 0.0f;
             float totalDistance = 0.0f;
+            float totalDuree    = 0.0f;
             for(Point p : entry.getValue()) {
                 if (p instanceof Depot) {
                     System.out.println("Depot");
@@ -67,11 +69,13 @@ class Solution {
                     Point lastPoint = entry.getValue().get(numClient - 1);
                     totalDemandes += c.getDemande();
                     totalDistance += lastPoint.getDistanceTo(c);
+                    totalDuree += lastPoint.getTimeTo(c) + (5 * 60) + (10 * c.getDemande());
                     System.out.println("Client " + numClient + " : [Demande = " +c.getDemande() + ", Distance = " + lastPoint.getDistanceTo(c) + ", Point = {" + c.getLatitude() + ":" + c.getLongitude() + "}]");
                 }
             }
             System.out.println("Total Demande : " + totalDemandes);
             System.out.println("Total Distance : " + totalDistance);
+            System.out.println("Total Temps : " + totalDuree);
             System.out.println("=====================================");
         }
 

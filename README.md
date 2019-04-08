@@ -10,3 +10,9 @@ Pour compiler et lancer le programme, ouvrir un terminal, se placer dans le doss
 - java Main
 
 Pour changer d'instance, modifier le fichier suivant : .\data\Assets.java et modifier la ligne 10, remplacer 'instance_0' par 'instance_1'.
+
+Export des données : 
+Chaque ligne est un véhicule, "C" => passage au dépôt, "R" => rechargement de la batterie.
+Exemple : 
+- Véhicule 1 : 2,4,C,5,R,12
+- Véhicule 2 : 6,3,C,7,C,8

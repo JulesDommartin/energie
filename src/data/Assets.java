@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Assets {
-    private static String instance = "instance_0";
+    private static String instance = "lyon_40_1_3";
 
     private static ArrayList<Client> clients;
 
@@ -109,7 +109,7 @@ public class Assets {
                     case "charge_fast":
                         charge_fast = Integer.valueOf(strings[1]);
                         break;
-                    case "charge_midium":
+                    case "charge_medium":
                         charge_midium = Integer.valueOf(strings[1]);
                         break;
                     case "charge_slow":

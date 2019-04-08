@@ -4,9 +4,6 @@ import java.util.*;
 
 // todo
 // Prendre enc oompte le temps et les recharges
-// exporter toute les solution tout le temps
-// refactor
-// calcul de temps : 5 minute par client + 10 seconde par sac
 
 public class Main {
 

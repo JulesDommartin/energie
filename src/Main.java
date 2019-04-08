@@ -4,6 +4,9 @@ import java.util.*;
 
 // todo
 // Prendre enc oompte le temps et les recharges
+// generer la liste des voisins a partir d'une solution
+// trouver differentes manieres de generer des voisins : swap de 2 clients, essayer de rajouter un client avant d'aller au depot, essayer de rajouter un client avant d' aller a la recharge
+
 
 public class Main {
 
@@ -20,44 +23,19 @@ public class Main {
 
         // Tri dans l'ordre croissant des demandes
         clients.sort(Comparator.comparingInt(Client::getDemande));
-        List<Client> voisinage1 = new ArrayList(clients);
-        clients.sort(Comparator.comparingDouble(Client::getLatitude));
-        List<Client> voisinage2 = new ArrayList(clients);
-        clients.sort(Comparator.comparingDouble(Client::getLongitude));
-        List<Client> voisinage3 = new ArrayList(clients);
+        // todo donner une liste de client non deterministe (randomise)
 
-//        Solution s1 = new Solution(capaciteHeuristique(voisinage1, vehicule, depot), clients, vehicule);
-//        Solution s2 = new Solution(capaciteHeuristique(voisinage2, vehicule, depot), clients);
-//        Solution s3 = new Solution(capaciteHeuristique(voisinage3, vehicule, depot), clients);
+        List<Client> voisinage1 = new ArrayList(clients);
+
 
         int nbIteration = 3;
 
         Solution s1 = getSolutionFromVoisinage(voisinage1, vehicule, depot, clients, nbIteration);
         s1.export();
 
-        // List<Client> voisinage1voisin1 = trouverVoisin(voisinage1);
-        // Solution s1v1 = new Solution(capaciteHeuristique(voisinage1voisin1, vehicule, depot), clients, vehicule);
-
-        // if(s1.evaluate() < s1v1.evaluate()){
-        //     Solution s1v2 = new Solution(capaciteHeuristique(trouverVoisin(voisinage1), vehicule, depot), clients, vehicule);
-        //     if(s1.evaluate() < s1v2.evaluate()) {
-        //         s1.export();
-        //     } else {
-        //         s1v2.export();
-        //     }
-        // } else {
-        //     Solution s1v2 = new Solution(capaciteHeuristique(trouverVoisin(voisinage1voisin1), vehicule, depot), clients, vehicule);
-        //     if(s1v1.evaluate() < s1v2.evaluate()) {
-        //         s1v1.export();
-        //     } else {
-        //         s1v2.export();
-        //     }
-        // }
-
     }
 
     private static Solution getSolutionFromVoisinage(List<Client> voisinage, Vehicule vehicule, Depot depot, List<Client> clients, int nbIteration) {
-        System.out.println(nbIteration);
         Solution s = new Solution(capaciteHeuristique(voisinage, vehicule, depot), clients, vehicule);
         if (nbIteration > 0) {
             List<Client> voisinageSuivant = trouverVoisin(voisinage);
@@ -101,14 +79,9 @@ public class Main {
                 Point lastPoint = pointsTournee.get(pointsTournee.size() - 1);
 
                 // Si l'autonomie restante est suffisante pour livrer le prochain client et retourner au depot
-                boolean canShipToNextClient = distanceRestante > lastPoint.getDistanceTo(c);
                 boolean canReturnToWarehouseAfterShipment = (distanceRestante - lastPoint.getDistanceTo(c)) > depot.getDistanceTo(c);
-                boolean hasTimeToGoToNextClient = tempsRestant > lastPoint.getTimeTo(c);
                 boolean hasTimeToReturnToWarehouseAfterShipment = (tempsRestant - lastPoint.getTimeTo((c)) > depot.getTimeTo(c));
-                if(canShipToNextClient &&
-                        canReturnToWarehouseAfterShipment &&
-                        hasTimeToGoToNextClient &&
-                        hasTimeToReturnToWarehouseAfterShipment) {
+                if(canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
                     pointsTournee.add(c);
                     if (i == clients.size() - 1) {
                         // Si tous les clients sont livrees, alors on peut retourner au depot
@@ -119,9 +92,16 @@ public class Main {
                     tempsRestant -= (lastPoint.getTimeTo(c) + (5 * 60) + (10 * c.getDemande()));
                     i++;
                 } else {
-                    // Si l'autonomie n'est pas suffisante pour faire les deux trajet, on retourne au depot pour recharger
-                    pointsTournee.add(depot);
-                    numeroTournee++;
+                    // Si l'autonomie n'est pas suffisante pour faire les deux trajet, on recharger
+                    if(!canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
+                        pointsTournee.add(new Recharge());
+                        distanceRestante = vehicule.getMax_dist();
+                        tempsRestant -= vehicule.getCharge_fast();
+                        numeroTournee++;
+                    } else {
+                        pointsTournee.add(new Depot());
+                        numeroTournee++;
+                    }
                 }
             } else {
                 // Si la capacitee n'est pas suffisante, on fini la tournee et on retourne au depot

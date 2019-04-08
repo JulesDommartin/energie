@@ -1,7 +1,4 @@
-import data.Client;
-import data.Depot;
-import data.Point;
-import data.Vehicule;
+import data.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,17 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 class Solution {
-    private Float distanceTotale;
-    private Float dureeTotale;
-    private Integer nombreVehicule;
-    private Integer contrainteDistance;
-    private Integer contrainteQuantite;
-    private Integer contrainteDuree;
-    private Integer visiteManquantes;
-    private Long visiteMltiples;
-    Map<Integer, List<Point>> tournee;
-    List<Client> clients;
-    Vehicule vehicule;
+    private Map<Integer, List<Point>> tournee;
+    private List<Client> clients;
+    private Vehicule vehicule;
 
     Solution(Map<Integer, List<Point>> t, List<Client> c, Vehicule v) {
         tournee = t;
@@ -29,7 +18,7 @@ class Solution {
         vehicule = v;
     }
 
-    public Float evaluate() {
+    Float evaluate() {
         List<Client> visitedClient = new ArrayList<>();
         float totalDistance = 0.0f;
         float totalDuree = 0.0f;
@@ -45,18 +34,18 @@ class Solution {
                 }
             }
         }
-        visiteManquantes = clients.size() - visitedClient.size();
-        visiteMltiples = visitedClient.size() - visitedClient.stream().distinct().count();
-        contrainteDistance = 0;
-        distanceTotale = totalDistance;
-        dureeTotale = totalDuree;
-        nombreVehicule = 1;
-        contrainteQuantite = 0;
-        contrainteDuree = 0;
+        Integer visiteManquantes = clients.size() - visitedClient.size();
+        Long visiteMltiples = visitedClient.size() - visitedClient.stream().distinct().count();
+        int contrainteDistance = 0;
+        float distanceTotale = totalDistance;
+        float dureeTotale = totalDuree;
+        int nombreVehicule = 1;
+        int contrainteQuantite = 0;
+        int contrainteDuree = 0;
         return distanceTotale + dureeTotale / 600 + (nombreVehicule - 1) * 500 + contrainteDistance * 50000 + contrainteQuantite * 10000 + contrainteDuree * 1000 + 100000*(visiteManquantes + visiteMltiples);
     }
 
-    public void export() {
+    void export() {
         System.out.println("Objectif : " + this.evaluate());
         String jsonString = "{\"tournees\": [";
         String depotString = "";
@@ -70,6 +59,8 @@ class Solution {
                 if (p instanceof Depot) {
                     System.out.println("Depot");
                     depotString = "\"depot\": {\"latitude\":" + ((Depot) p).getLatitude() + ", \"longitude\": " + ((Depot) p).getLongitude() + "}";
+                } else if (p instanceof Recharge) {
+                    System.out.println("Recharge");
                 } else {
                     Client c = (Client)p;
                     int numClient = entry.getValue().indexOf(p);
@@ -97,6 +88,7 @@ class Solution {
         System.out.println(jsonString);
 
         try {
+
             BufferedWriter writer = new BufferedWriter(new FileWriter("result.json"));
             writer.write(jsonString);
 

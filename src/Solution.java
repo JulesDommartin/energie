@@ -3,7 +3,10 @@ import data.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -88,8 +91,9 @@ class Solution {
         System.out.println(jsonString);
 
         try {
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter("result.json"));
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+            Date date = new Date();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(dateFormat.format(date) + "_result.json"));
             writer.write(jsonString);
 
             writer.close();

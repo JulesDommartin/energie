@@ -2,13 +2,18 @@ import data.*;
 
 import java.util.*;
 
+// todo
+// Prendre enc oompte le temps et les recharges
+// exporter toute les solution tout le temps
+// refactor
+// calcul de temps : 5 minute par client + 10 seconde par sac
+
 public class Main {
 
     public static void main(String[] args) {
         List<Client> clients = Assets.getClients();
         Vehicule vehicule = Assets.getVehicule();
         Depot depot = Assets.getDepot();
-        Map<Integer, List<Point>> tourneesCapacite = new HashMap<>();
 
 
         Float totalCommand = 0.0f;
@@ -18,36 +23,41 @@ public class Main {
 
         // Tri dans l'ordre croissant des demandes
         clients.sort(Comparator.comparingInt(Client::getDemande));
+        List<Client> voisinage1 = new ArrayList(clients);
+        clients.sort(Comparator.comparingDouble(Client::getLatitude));
+        List<Client> voisinage2 = new ArrayList(clients);
+        clients.sort(Comparator.comparingDouble(Client::getLongitude));
+        List<Client> voisinage3 = new ArrayList(clients);
 
-        capaciteHeuristique(clients, vehicule, depot, tourneesCapacite);
+        Solution s1 = new Solution(capaciteHeuristique(voisinage1, vehicule, depot), clients, vehicule);
+//        Solution s2 = new Solution(capaciteHeuristique(voisinage2, vehicule, depot), clients);
+//        Solution s3 = new Solution(capaciteHeuristique(voisinage3, vehicule, depot), clients);
 
 
-        // Affichage du rapport des tournees
-        System.out.println("Nombre de tournee maximales ; " + Math.ceil(totalCommand / vehicule.getCapacity()));
-        for (Map.Entry<Integer, List<Point>> entry : tourneesCapacite.entrySet()) {
-            System.out.println("Tournee " + (entry.getKey() + 1) + " :");
-            float totalDemandes = 0.0f;
-            float totalDistance = 0.0f;
-            for(Point p : entry.getValue()) {
-                if (p instanceof Depot) {
-                    System.out.println("Depot");
-                } else {
-                    Client c = (Client)p;
-                    int numClient = entry.getValue().indexOf(p);
-                    Point lastPoint = entry.getValue().get(numClient - 1);
-                    totalDemandes += c.getDemande();
-                    totalDistance += lastPoint.getDistanceTo(c);
-                    System.out.println("Client " + numClient + " : [Demande = " +c.getDemande() + ", Distance = " + lastPoint.getDistanceTo(c) + ", Point = {" + c.getLatitude() + ":" + c.getLongitude() + "}]");
-                }
+        List<Client> voisinage1voisin1 = trouverVoisin(voisinage1);
+        Solution s1v1 = new Solution(capaciteHeuristique(voisinage1voisin1, vehicule, depot), clients, vehicule);
+
+        if(s1.evaluate() < s1v1.evaluate()){
+            Solution s1v2 = new Solution(capaciteHeuristique(trouverVoisin(voisinage1), vehicule, depot), clients, vehicule);
+            if(s1.evaluate() < s1v2.evaluate()) {
+                s1.export();
+            } else {
+                s1v2.export();
             }
-            System.out.println("Total Demande : " + totalDemandes);
-            System.out.println("Total Distance : " + totalDistance);
-            System.out.println("=====================================");
+        } else {
+            Solution s1v2 = new Solution(capaciteHeuristique(trouverVoisin(voisinage1voisin1), vehicule, depot), clients, vehicule);
+            if(s1v1.evaluate() < s1v2.evaluate()) {
+                s1v1.export();
+            } else {
+                s1v2.export();
+            }
         }
 
     }
 
-    private static void capaciteHeuristique(List<Client> clients, Vehicule vehicule, Depot depot, Map<Integer, List<Point>> tournees) {
+    private static Map<Integer, List<Point>> capaciteHeuristique(List<Client> clients, Vehicule vehicule, Depot depot) {
+        Map<Integer, List<Point>>  tournees = new HashMap<>();
+
         int distanceRestante = vehicule.getMax_dist();
         int capaciteRestante = vehicule.getCapacity();
 
@@ -94,7 +104,20 @@ public class Main {
                 numeroTournee++;
             }
         }
+        return tournees;
+    }
+
+    private static List<Client> trouverVoisin(List<Client> clients) {
+        ArrayList result = new ArrayList(clients);
+
+        long index1 = Math.round(Math.random() * clients.size());
+        long index2 = Math.round(Math.random() * clients.size());
+        while (index1 == index2){
+            index2 = Math.round(Math.random() * clients.size());
+        }
+
+        Collections.swap(result, (int)index1, (int)index2);
+        return result;
     }
 }
-
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Assets {
-    private static String instance = "lyon_40_1_3";
+    private static String instance = "instance_0";
 
     private static ArrayList<Client> clients;
 
@@ -75,15 +75,13 @@ public class Assets {
         createDepotTimeAndDistances(tempsDepot, distancesDepot);
         createClientsTimes(temps);
         createClientsDistances(distances);
-
-
     }
 
     private void createDepotTimeAndDistances(Integer[] times, Double[] distances) {
-        for (int i = 1; i < times.length; i++)
-            depot.setTimeTo(clients.get(i-1), times[i]);
-        for (int i = 1; i < distances.length; i++)
-            depot.setDistanceTo(clients.get(i-1), distances[i]);
+        for (int i = 0; i < times.length - 1; i++)
+            depot.setTimeTo(clients.get(i), times[i]);
+        for (int i = 0; i < distances.length - 1; i++)
+            depot.setDistanceTo(clients.get(i), distances[i]);
     }
 
     private Vehicule readVehicule(BufferedReader vehicleBufRead) throws IOException {
@@ -141,8 +139,8 @@ public class Assets {
         for (int i = 0; i < clients.size(); i++) {
             Client currentClient = clients.get(i);
             Double[] dists = distances.get(i);
-            for (int j = 1; j < dists.length; j++) {
-                Client client = clients.get(j-1);
+            for (int j = 0; j < dists.length - 1; j++) {
+                Client client = clients.get(j);
                 currentClient.setDistanceTo(client, dists[j]);
             }
         }
@@ -152,8 +150,8 @@ public class Assets {
         for (int i = 0; i < clients.size(); i++) {
             Client currentClient = clients.get(i);
             Integer[] times = temps.get(i);
-            for (int j = 1; j < times.length; j++) {
-                Client client = clients.get(j-1);
+            for (int j = 0; j < times.length - 1; j++) {
+                Client client = clients.get(j);
                 currentClient.setTimeTo(client, times[j]);
             }
         }
@@ -164,9 +162,11 @@ public class Assets {
         Integer[] result = null;
         while ((myLine = tempsBufRead.readLine()) != null) {
             String[] strings = myLine.split(" ");
-            if (result == null) result = StringArrToIntegerArr(strings);
-            else temps.add(StringArrToIntegerArr(strings));
+            temps.add(StringArrToIntegerArr(strings));
         }
+        int lastIndex = temps.size() -1;
+        result = temps.get(lastIndex);
+        temps.remove(lastIndex);
         return result;
     }
 
@@ -175,9 +175,11 @@ public class Assets {
         Double[] result = null;
         while ((myLine = distanceBufRead.readLine()) != null) {
             String[] strings = myLine.split(" ");
-            if (result == null) result = StringArrToDoubleArr(strings);
-            else distances.add(StringArrToDoubleArr(strings));
+            distances.add(StringArrToDoubleArr(strings));
         }
+        int lastIndex = distances.size() -1;
+        result = distances.get(lastIndex);
+        distances.remove(lastIndex);
         return result;
     }
 
@@ -187,12 +189,12 @@ public class Assets {
         while ((myLine = coordBufRead.readLine()) != null) {
             String[] strings = myLine.split(",");
             if (strings.length == 2) {
-                if (result == null)
-                    result = new Pair<>(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
-                else
-                    coordonees.add(new Pair<>(Double.parseDouble(strings[0]), Double.parseDouble(strings[1])));
+                coordonees.add(new Pair<>(Double.parseDouble(strings[0]), Double.parseDouble(strings[1])));
             }
         }
+        int lastIndex = coordonees.size() -1;
+        result = coordonees.get(lastIndex);
+        coordonees.remove(lastIndex);
         return result;
     }
 

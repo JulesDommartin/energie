@@ -48,5 +48,14 @@ public class Depot implements Point {
     private Double latitude;
     private Double longitude;
 
+    public Depot() {
+    }
+
+    Depot(Depot d) {
+        times = new HashMap<>(d.times);
+        distances = new HashMap<>(d.distances);
+        latitude = d.latitude;
+        longitude = d.longitude;
+    }
 
 }

@@ -25,12 +25,12 @@ public class Vehicule {
         this.charge_fast = charge_fast;
     }
 
-    public Integer getCharge_midium() {
-        return charge_midium;
+    public Integer getCharge_medium() {
+        return charge_medium;
     }
 
-    public void setCharge_midium(Integer charge_midium) {
-        this.charge_midium = charge_midium;
+    public void setCharge_medium(Integer charge_medium) {
+        this.charge_medium = charge_medium;
     }
 
     public Integer getCharge_slow() {
@@ -68,7 +68,7 @@ public class Vehicule {
     private Integer max_dist = null;
     private Integer capacity = null;
     private Integer charge_fast = null;
-    private Integer charge_midium = null;
+    private Integer charge_medium = null;
     private Integer charge_slow = null;
     private String start_time = null;
     private String end_time = null;
@@ -79,5 +79,15 @@ public class Vehicule {
     }
 
     private Vehicule() {
+    }
+
+    public Vehicule(Vehicule v) {
+        max_dist = v.max_dist;
+        capacity = v.capacity;
+        charge_fast = v.charge_fast;
+        charge_medium = v.charge_medium;
+        charge_slow = v.charge_slow;
+        start_time = v.start_time;
+        end_time = v.end_time;
     }
 }

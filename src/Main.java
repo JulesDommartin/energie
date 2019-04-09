@@ -3,10 +3,9 @@ import data.*;
 import java.util.*;
 
 // todo
-// Prendre enc oompte le temps et les recharges
-// generer la liste des voisins a partir d'une solution
+// generer la liste des voisins a partir d'une solution -> Voir trouverVoisin2
 // trouver differentes manieres de generer des voisins : swap de 2 clients, essayer de rajouter un client avant d'aller au depot, essayer de rajouter un client avant d' aller a la recharge
-
+// Utiliser la liste de client normale et la liste randomisée avec shuffledClient
 
 public class Main {
 
@@ -22,10 +21,11 @@ public class Main {
 
         // Tri dans l'ordre croissant des demandes
         clients.sort(Comparator.comparingInt(Client::getDemande));
-        // todo donner une liste de client non deterministe (randomise)
+        // Liste Random
+        List<Client> shuffledClient = Assets.getClients();
+        Collections.shuffle(shuffledClient);
 
         List<Client> voisinage1 = new ArrayList(clients);
-
 
         int nbIteration = 3;
 
@@ -91,13 +91,14 @@ public class Main {
                     tempsRestant -= (lastPoint.getTimeTo(c) + (5 * 60) + (10 * c.getDemande()));
                     i++;
                 } else {
-                    // Si l'autonomie n'est pas suffisante pour faire les deux trajet, on recharger
+                    // Si l'autonomie n'est pas suffisante pour faire les deux trajet, on recharge
                     if (!canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
                         pointsTournee.add(new Recharge());
                         distanceRestante = vehicule.getMax_dist();
                         tempsRestant -= vehicule.getCharge_fast();
                         numeroTournee++;
                     } else {
+                        // Sinon le temps restant n'est pas suffisant, on rentre au depot
                         pointsTournee.add(new Depot());
                         numeroTournee++;
                     }

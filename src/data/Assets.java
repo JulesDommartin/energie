@@ -23,15 +23,15 @@ public class Assets {
     }
 
     public static Vehicule getVehicule() {
-        return vehicule;
+        return new Vehicule(vehicule);
     }
 
     public static ArrayList<Client> getClients() {
-        return clients;
+        return new ArrayList<>(clients);
     }
 
     public static Depot getDepot() {
-        return depot;
+        return new Depot(depot);
     }
 
     private Assets() throws Exception {
@@ -127,7 +127,7 @@ public class Assets {
             result.setMax_dist(max_dist);
             result.setCapacity(capacity);
             result.setCharge_fast(charge_fast);
-            result.setCharge_midium(charge_midium);
+            result.setCharge_medium(charge_midium);
             result.setCharge_slow(charge_slow);
             result.setStart_time(start_time);
             result.setEnd_time(end_time);

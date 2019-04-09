@@ -15,10 +15,9 @@ public class Main {
         Vehicule vehicule = Assets.getVehicule();
         Depot depot = Assets.getDepot();
 
-
         Float totalCommand = 0.0f;
         for (Client c : clients) {
-            totalCommand = totalCommand + c.getDemande() ;
+            totalCommand = totalCommand + c.getDemande();
         }
 
         // Tri dans l'ordre croissant des demandes
@@ -49,10 +48,10 @@ public class Main {
         } else {
             return s;
         }
-    } 
+    }
 
     private static Map<Integer, List<Point>> capaciteHeuristique(List<Client> clients, Vehicule vehicule, Depot depot) {
-        Map<Integer, List<Point>>  tournees = new HashMap<>();
+        Map<Integer, List<Point>> tournees = new HashMap<>();
 
         int distanceRestante = vehicule.getMax_dist();
         int capaciteRestante = vehicule.getCapacity();
@@ -64,7 +63,7 @@ public class Main {
             Client c = clients.get(i);
 
             List<Point> pointsTournee = tournees.get(numeroTournee);
-            if(pointsTournee == null) {
+            if (pointsTournee == null) {
                 // Creation d'une tournee
                 distanceRestante = vehicule.getMax_dist();
                 capaciteRestante = vehicule.getCapacity();
@@ -81,7 +80,7 @@ public class Main {
                 // Si l'autonomie restante est suffisante pour livrer le prochain client et retourner au depot
                 boolean canReturnToWarehouseAfterShipment = (distanceRestante - lastPoint.getDistanceTo(c)) > depot.getDistanceTo(c);
                 boolean hasTimeToReturnToWarehouseAfterShipment = (tempsRestant - lastPoint.getTimeTo((c)) > depot.getTimeTo(c));
-                if(canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
+                if (canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
                     pointsTournee.add(c);
                     if (i == clients.size() - 1) {
                         // Si tous les clients sont livrees, alors on peut retourner au depot
@@ -93,7 +92,7 @@ public class Main {
                     i++;
                 } else {
                     // Si l'autonomie n'est pas suffisante pour faire les deux trajet, on recharger
-                    if(!canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
+                    if (!canReturnToWarehouseAfterShipment && hasTimeToReturnToWarehouseAfterShipment) {
                         pointsTournee.add(new Recharge());
                         distanceRestante = vehicule.getMax_dist();
                         tempsRestant -= vehicule.getCharge_fast();
@@ -115,14 +114,33 @@ public class Main {
     private static List<Client> trouverVoisin(List<Client> clients) {
         ArrayList result = new ArrayList(clients);
 
-        int index1 = (int)Math.floor(Math.random() * clients.size());
-        int index2 = (int)Math.floor(Math.random() * clients.size());
-        while (index1 == index2){
-            index2 = (int)Math.floor(Math.random() * clients.size());
+        int index1 = (int) Math.floor(Math.random() * clients.size());
+        int index2 = (int) Math.floor(Math.random() * clients.size());
+        while (index1 == index2) {
+            index2 = (int) Math.floor(Math.random() * clients.size());
         }
 
         Collections.swap(result, index1, index2);
         return result;
     }
+
+    private static List<List<Client>> trouverVoisin2(List<Client> clients) {
+        List<List<Client>> result = new ArrayList();
+        int index1, index2;
+
+        for (int i = 0; i < clients.size() - 1; i++) {
+            index1 = i;
+            if (i == clients.size() -1) {
+                index2 = 0;
+            } else {
+                index2 = i +1;
+            }
+            List<Client> voisin = new ArrayList<>(clients);
+            Collections.swap(voisin, index1, index2);
+            result.add(voisin);
+        }
+        return result;
+    }
+
 }
 

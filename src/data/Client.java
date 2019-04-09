@@ -3,7 +3,7 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Client implements Point, Cloneable {
+public class Client implements Point {
     public Double getLatitude() {
         return latitude;
     }
@@ -40,11 +40,6 @@ public class Client implements Point, Cloneable {
 
     void setDemmande(Integer demande) {
         this.demande = demande;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 
     public Map<Client, Double> getDistances() {

@@ -30,7 +30,9 @@ public class Main {
         int nbIteration = 3;
 
         Solution s1 = getSolutionFromVoisinage(voisinage1, vehicule, depot, clients, nbIteration);
-        s1.export();
+        // s1.export();
+        Solution s2 = getSolutionFromVoisinage2(voisinage1, vehicule, depot, clients, nbIteration);
+        s2.export();
 
     }
 
@@ -45,6 +47,25 @@ public class Main {
             } else {
                 return getSolutionFromVoisinage(voisinage, vehicule, depot, clients, nbIteration);
             }
+        } else {
+            return s;
+        }
+    }
+    private static Solution getSolutionFromVoisinage2(List<Client> voisinage, Vehicule vehicule, Depot depot, List<Client> clients, int nbIteration) {
+        Solution s = new Solution(capaciteHeuristique(voisinage, vehicule, depot), clients, vehicule);
+        if (nbIteration > 0) {
+            nbIteration--;
+            List<List<Client>> voisinagesSuivants = trouverVoisin2(voisinage);
+            List<Solution> solutions = new ArrayList();
+            for(List<Client> c : voisinagesSuivants) {
+                solutions.add(new Solution(capaciteHeuristique(c, vehicule, depot),c, vehicule));
+            }
+            Solution bestSolution = s;
+            for(Solution solution : solutions) {
+                if(bestSolution.evaluate() > solution.evaluate()) bestSolution = solution;
+            }
+            if(bestSolution == s) return s;
+            else return getSolutionFromVoisinage2(bestSolution.getClients(),vehicule, depot, clients, nbIteration);
         } else {
             return s;
         }

@@ -12,6 +12,11 @@ import java.util.Map;
 
 class Solution {
     private Map<Integer, List<Point>> tournee;
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
     private List<Client> clients;
     private Vehicule vehicule;
 

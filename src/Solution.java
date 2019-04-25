@@ -96,9 +96,8 @@ class Solution {
         System.out.println(jsonString);
 
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
             Date date = new Date();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(dateFormat.format(date) + "_result.json"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(date.getTime() + "_result.json"));
             writer.write(jsonString);
 
             writer.close();

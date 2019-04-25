@@ -30,9 +30,11 @@ public class Main {
         int nbIteration = 3;
 
         Solution s1 = getSolutionFromVoisinage(voisinage1, vehicule, depot, clients, nbIteration);
-        // s1.export();
+        s1.export();
         Solution s2 = getSolutionFromVoisinage2(voisinage1, vehicule, depot, clients, nbIteration);
         s2.export();
+        Solution s3 = getSolutionFromVoisinage3(voisinage1, vehicule, depot, clients, nbIteration);
+        s3.export();
 
     }
 
@@ -66,6 +68,25 @@ public class Main {
             }
             if(bestSolution == s) return s;
             else return getSolutionFromVoisinage2(bestSolution.getClients(),vehicule, depot, clients, nbIteration);
+        } else {
+            return s;
+        }
+    }
+    private static Solution getSolutionFromVoisinage3(List<Client> voisinage, Vehicule vehicule, Depot depot, List<Client> clients, int nbIteration) {
+        Solution s = new Solution(capaciteHeuristique(voisinage, vehicule, depot), clients, vehicule);
+        if (nbIteration > 0) {
+            nbIteration--;
+            List<List<Client>> voisinagesSuivants = trouverVoisin3(voisinage);
+            List<Solution> solutions = new ArrayList();
+            for(List<Client> c : voisinagesSuivants) {
+                solutions.add(new Solution(capaciteHeuristique(c, vehicule, depot),c, vehicule));
+            }
+            Solution bestSolution = s;
+            for(Solution solution : solutions) {
+                if(bestSolution.evaluate() > solution.evaluate()) bestSolution = solution;
+            }
+            if(bestSolution == s) return s;
+            else return getSolutionFromVoisinage3(bestSolution.getClients(),vehicule, depot, clients, nbIteration);
         } else {
             return s;
         }
@@ -155,10 +176,30 @@ public class Main {
             if (i == clients.size() -1) {
                 index2 = 0;
             } else {
-                index2 = i +1;
+                index2 = i + 1;
             }
             List<Client> voisin = new ArrayList<>(clients);
             Collections.swap(voisin, index1, index2);
+            result.add(voisin);
+        }
+        return result;
+    }
+    private static List<List<Client>> trouverVoisin3(List<Client> clients) {
+        List<List<Client>> result = new ArrayList();
+        int index1, index2, index3;
+
+        for (int i = 0; i < clients.size() - 1; i++) {
+            index1 = i;
+            if (i == clients.size() - 2) {
+                index2 = 0;
+                index3 = 1;
+            } else {
+                index2 = i + 1;
+                index3 = i + 2;
+            }
+            List<Client> voisin = new ArrayList<>(clients);
+            Collections.swap(voisin, index1, index2);
+            Collections.swap(voisin, index1, index3);
             result.add(voisin);
         }
         return result;

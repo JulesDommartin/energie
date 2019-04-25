@@ -1,4 +1,4 @@
-$.getJSON("result.json", function(json) {
+$.getJSON("1556211428719_result.json", function(json) {
   console.log(json); // this will show the info it in firebug console
   let mymap = L.map('mapid').setView([45.755753, 4.8387673], 12);
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZG9tbWFydGoiLCJhIjoiY2pvNXFsZHBzMDl0azN2b2F0aG4wMmg2MyJ9.wSgUUIsVOaK8xlHHXrBuOQ', {
@@ -8,39 +8,55 @@ $.getJSON("result.json", function(json) {
       accessToken: 'pk.eyJ1IjoiZG9tbWFydGoiLCJhIjoiY2pvNXFsZHBzMDl0azN2b2F0aG4wMmg2MyJ9.wSgUUIsVOaK8xlHHXrBuOQ'
   }).addTo(mymap);
 
+  const depot = json.depot;
+
   // Récupération des tournées
   const tournees = json.tournees;
-  const points = tournees[0].clients;
-  console.log(points);
 
-  // Initialisation du tableau des points
-  let latlngs = [];
+  const colors = [
+    'red',
+    'blue',
+    'green',
+    'yellow',
+    'purple',
+    'gray'
+  ];
 
-  // Ajout des points avec des marqueurs sur la map
-  points.forEach((point, i) => {
-    let latlng = [point.latitude, point.longitude];
-    if (i === 0) {
-      var myIcon = L.icon({
-        iconUrl: 'depot.png',
-        iconSize: [38, 45],
-      });
-      L.marker(latlng, {
-        title: "Dépôt",
-        icon: myIcon
-      }).addTo(mymap);
-    } else {
+  var myIcon = L.icon({
+    iconUrl: 'depot.png',
+    iconSize: [38, 45],
+  });
+  L.marker([depot.latitude, depot.longitude], {
+    title: "Dépôt",
+    icon: myIcon
+  }).addTo(mymap);
+
+  tournees.forEach((tournee, i) => {
+    const points = tournee.clients;
+    console.log(points);
+  
+    // Initialisation du tableau des points
+    let latlngs = [];
+  
+    latlngs.push([depot.latitude, depot.longitude]);
+
+    // Ajout des points avec des marqueurs sur la map
+    points.forEach((point, i) => {
+      let latlng = [point.latitude, point.longitude];
       L.marker(latlng, {
         title: "Client " + i
       }).addTo(mymap);
-    }
-    latlngs.push(latlng);
-  });
-  latlngs.push([points[0].latitude, points[0].longitude]);
+      latlngs.push(latlng);
+    });
+    latlngs.push([depot.latitude, depot.longitude]);
+  
+    // create a red polyline from an array of LatLng points
+    var polyline = L.polyline(latlngs, {color: colors[i]}).addTo(mymap);
 
-  // create a red polyline from an array of LatLng points
-  var polyline = L.polyline(latlngs, {color: 'red'}).addTo(mymap);
-  // zoom the map to the polyline
-  mymap.fitBounds(polyline.getBounds());
+    // zoom the map to the polyline
+    mymap.fitBounds(polyline.getBounds());
+  });
+
 
 });
 

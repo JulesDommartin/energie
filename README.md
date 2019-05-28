@@ -43,3 +43,9 @@ JSON format :
     ...
   ]
 }
+
+
+## Tests
+
+Les tests sont dans le fichier ApplicationTest
+Ils ont été écrits avec la librairie Junit 4.0

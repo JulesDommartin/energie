@@ -13,6 +13,8 @@ import java.util.Map;
 class Solution {
     private Map<Integer, List<Point>> tournee;
 
+    public Map<Integer, List<Point>> getTournees() { return tournee; }
+
     public List<Client> getClients() {
         return clients;
     }

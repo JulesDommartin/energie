@@ -3,6 +3,9 @@
 Ce projet a pour but de trouver le chemin optimal pour effectuer la livraison de client avec un véhicule électrique.  
 Ce projet a été réalisé dans le cadre de l’option Energie en M2 Miage.
 
+
+ATTENTION: Ce projet est sous licence MIT.
+
 ## Requirements
 
 - Java 8 min
